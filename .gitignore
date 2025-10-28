@@ -1,0 +1,19 @@
+﻿# IDE
+.vs/
+.idea/
+*.suo
+*.user
+*.vsidx
+
+# Build
+bin/
+obj/
+Debug*/
+Release*/
+x64/
+x86/
+
+# OS/Misc
+Thumbs.db
+.DS_Store
+*.log
