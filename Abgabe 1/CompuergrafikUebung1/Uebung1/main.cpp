@@ -234,18 +234,18 @@ void display (void)
 	// - Try    here different parameter settings, i.e. start point, end point, mid-point, radius.
 	//
 	// underneath line plotting
-	
-    Point p1  (5, 10);				// first point of the line, aka start point
-	Point p2  ( 15, -25);				// last  point of the line, aka end   point
+	/*
+    Point p1  (4, 10);				// first point of the line, aka start point
+	Point p2  ( 15, 25);				// last  point of the line, aka end   point
 	Color cRed(1,0,0);					// color       of the line
 	BresenhamLine  (p1, p2, cRed);		// plot the line
+	*/
 	
-	/*
-	int r = 7;							// radius    of the circle
+	int r = 15;							// radius    of the circle
 	Point p(-10, -5);					// mid-point of the circle
 	Color cBlue(0,0,1);					// color     of the circle
 	BresenhamCircle (p, r, cBlue);		// plot the circle
-	*/
+	
 
 	//
     // Please, do not change below this point!
