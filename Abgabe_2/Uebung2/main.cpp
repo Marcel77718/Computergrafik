@@ -156,6 +156,11 @@ void displayExercise3(void)
 	moon.setColor(MoonGrey);
 	moon.setPosition(CVec2f(300, 0));
 	moon.draw();
+
+	earth.rotate(3.14);
+	earth.draw();
+	earth.rotate(3.3);
+	earth.draw();
 	//
 	///////
 
