@@ -18,6 +18,32 @@ void Planet::draw() const
 	glBegin(GL_POINTS);
 	glColor3d(color.r, color.g, color.b);
 	// ...
+	int r = this->radius;
+	int p_x = static_cast<int>(this->position[0]);
+	int p_y = static_cast<int>(this->position[1]);
+
+	int x, y, d, dse, de;
+	x = 0; y = r;
+	d = 5 - 4 * r;
+
+	auto plot = [&](int x, int y) {
+		glVertex2i(p_x + x, p_y + y);
+		glVertex2i(p_x - x, p_y + y);
+		glVertex2i(p_x + x, p_y - y);
+		glVertex2i(p_x - x, p_y - y);
+		glVertex2i(p_x + y, p_y + x);
+		glVertex2i(p_x - y, p_y + x);
+		glVertex2i(p_x + y, p_y - x);
+		glVertex2i(p_x - y, p_y - x);
+		};
+
+	plot(x, y);
+
+	while (y > x) {
+		if (d >= 0) { dse = 4 * (2 * (x - y) + 5); d += dse; x++; y--; }
+		else { de = 4 * (2 * x + 3); d += de; x++; }
+		plot(x, y);
+	}
 
 	// implement BresenhamCircle here and use
 	// glVertex2i (x, y);

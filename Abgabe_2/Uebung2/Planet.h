@@ -17,7 +17,7 @@
 class Planet {
 private:
 	Color  color    = Red;
-	int    radius   = 10;
+	int    radius = 10;
 	CVec2f position = CVec2f(0.0);
 
 public:

@@ -16,6 +16,8 @@
 
 // maybe you have to switch to your local include path, depending on your GLUT installation
 #include "glut.h"
+// additions:
+#include "Planet.h"
 
 ////////////////////////////////////////////////////////////
 //
@@ -75,7 +77,8 @@ void initGL ()
 	glDrawBuffer (GL_BACK);							// Tell GL that we draw to the back buffer and swap ...
 													// ... buffers when image is ready to avoid flickering	
 	float b = 70.0f / 100.0f;
-	glClearColor(b, b, b, 1.0f);					// Tell which color to use to clear image
+	//glClearColor(b, b, b, 1.0f);					// Tell which color to use to clear image
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);		// black background
 }
 
 // Callback Function to change the window size.
@@ -132,13 +135,27 @@ void displayExercise3(void)
 	// and display your planet data of EXERCISE 3 here 
 	// using the AFFINE implementation of affine maps.
 	//
-
+	/*
 	glBegin (GL_TRIANGLES);
 	glColor3f (1,0,0);	glVertex2i ( int(g_iPos),           0 );
 	glColor3f (0,1,0);	glVertex2i (-int(g_iPos),  int(g_iPos));
 	glColor3f (0,0,1);	glVertex2i (-int(g_iPos), -int(g_iPos));
 	glEnd ();
-
+	*/
+	Planet sun = Planet();
+	sun.setColor(Yellow);
+	sun.setRadius(80);
+	sun.draw();
+	Planet earth = Planet();
+	earth.setRadius(15);
+	earth.setColor(Blue);
+	earth.setPosition(CVec2f(260, 0));
+	earth.draw();
+	Planet moon = Planet();
+	moon.setRadius(5);
+	moon.setColor(MoonGrey);
+	moon.setPosition(CVec2f(300, 0));
+	moon.draw();
 	//
 	///////
 

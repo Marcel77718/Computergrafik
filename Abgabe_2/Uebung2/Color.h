@@ -34,3 +34,5 @@ const Color Blue   (0.0, 0.0, 1.0);
 const Color Yellow (1.0, 1.0, 0.0);
 const Color Cyan   (0.0, 1.0, 1.0);
 const Color Magenta(1.0, 0.0, 1.0);
+const Color White  (1.0, 1.0, 1.0);
+const Color MoonGrey(0.8, 0.8, 0.8);
