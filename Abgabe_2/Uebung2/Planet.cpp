@@ -81,3 +81,23 @@ void Planet::rotate(float theta, CVec2f center)
 	);
 }
 
+void Planet::rotate(float theta, CVec3f center)
+{
+	//unvorteilhaft die Matrix jedes Mal neu zu bauen, wie besser?
+	CMat3f TranslationToO;
+	TranslationToO.setRow(CVec3f( 1, 0, -center[0]), 0);
+	TranslationToO.setRow(CVec3f( 0, 1, -center[1]), 1);
+	TranslationToO.setRow(CVec3f( 0, 0,          1), 2);
+	CMatrix<float, 3> Rotation;
+	Rotation.setRow(CVec3f( cos(theta), -sin(theta), 0), 0);
+	Rotation.setRow(CVec3f( sin(theta),  cos(theta), 0), 1);
+	Rotation.setRow(CVec3f( 0,                    0, 1), 2);
+	CMatrix<float, 3> TranslationBack;
+	TranslationBack.setRow(CVec3f( 1, 0, center[0]), 0);
+	TranslationBack.setRow(CVec3f( 0, 1, center[1]), 1);
+	TranslationBack.setRow(CVec3f( 0, 0,         1), 2);
+	CMatrix<float, 3> Transformation = TranslationToO * Rotation * TranslationBack;
+
+	this->setPositionHomogeneous(Transformation * this->getPositionHomogeneous());
+}
+

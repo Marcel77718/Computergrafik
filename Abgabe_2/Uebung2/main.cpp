@@ -211,13 +211,20 @@ void displayExercise4(void)
 	// and display your planet data of EXERCISE 4 here 
 	// using the HOMOGENEOUS implementation of affine maps.
 	//
+	sun.draw();
+	//center rotates around sun
+	mass_center.rotate(mass_center_velocity, CVec3f(0, 0, 1));
+	//earth moves with center of mass
+	earth.rotate(mass_center_velocity, CVec3f(0, 0, 1));
+	//eath rotates around mass center
+	earth.rotate(earth_moon_velocity, mass_center.getPositionHomogeneous());
+	earth.draw();
+	//moon moves with center of mass
+	moon.rotate(mass_center_velocity, CVec3f(0, 0, 1));
+	//moon rotates around mass center
+	moon.rotate(earth_moon_velocity, mass_center.getPositionHomogeneous());
+	moon.draw();
 
-	glBegin (GL_QUADS);
-	glColor3f(1, 0, 0);	glVertex2i(-g_vecPos[1], -g_vecPos[2]);
-	glColor3f(0, 1, 0);	glVertex2i( g_vecPos[1], -g_vecPos[2]);
-	glColor3f(0, 0, 1);	glVertex2i( g_vecPos[1],  g_vecPos[2]);
-	glColor3f(1, 1, 0);	glVertex2i(-g_vecPos[1],  g_vecPos[2]);
-	glEnd ();
 
 	//
 	///////
