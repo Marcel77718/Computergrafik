@@ -37,6 +37,6 @@ public:
 	void draw() const; // Implement in this method your Bresenham algorithm for circles 
 
 	//rotation
-	void rotate(float theta);
+	void rotate(float theta, CVec2f center);
 
 };

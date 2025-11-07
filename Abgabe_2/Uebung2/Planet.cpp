@@ -55,13 +55,11 @@ void Planet::draw() const
 	glEnd();
 }
 
-void Planet::rotate(float theta)
+void Planet::rotate(float theta, CVec2f center)
 {
-	CVec2f row0 = (cos(theta), -sin(theta));
-	CVec2f row1 = (sin(theta), cos(theta));
-	CMatrix<float, 2> rot_around_sun;
-	rot_around_sun.setRow(row0, 0);
-	rot_around_sun.setRow(row1, 0);
-	this->position = rot_around_sun * this->position;
+	this->position = CVec2f(
+		center[0] + (this->position[0] - center[0]) * cos(theta) - (this->position[1] - center[1]) * sin(theta),
+		center[1] + (this->position[0] - center[0]) * sin(theta) + (this->position[1] - center[1]) * cos(theta)
+	);
 }
 

@@ -44,6 +44,15 @@ float g_iPosIncr;		// ... position increment (used in display1)
 
 CVec2i g_vecPos;		// same as above but in vector form ...
 CVec2i g_vecPosIncr;	// (used in display2)
+
+//our variables for the planets
+Planet sun = Planet();
+Planet earth = Planet();
+Planet moon = Planet();
+Planet mass_center;
+float mass_center_velocity;
+float earth_moon_velocity;
+
 //
 /////////////////////////////////////////////////////////////
 
@@ -56,6 +65,18 @@ void init ()
 	// init variables for display1
 	g_iPos     = 0;
 	g_iPosIncr = 2;
+
+	sun.setColor(Yellow);
+	sun.setRadius(80);
+	earth.setRadius(15);
+	earth.setColor(Blue);
+	earth.setPosition(CVec2f(260, 0));
+	moon.setRadius(5);
+	moon.setColor(MoonGrey);
+	moon.setPosition(CVec2f(300, 0));
+	mass_center.setPosition(CVec2f(earth.getPosition() * 3 + moon.getPosition()) * 0.25);
+	mass_center_velocity = 0.02;
+	earth_moon_velocity = 0.08;
 
 	// init variables for display2
 	int aiPos    [2] = {0, 0};
@@ -126,7 +147,6 @@ void timer (int value)
 // display callback function for EXERCISE 3
 void displayExercise3(void)
 {
-
 	glClear (GL_COLOR_BUFFER_BIT);
 
 	///////
@@ -142,25 +162,36 @@ void displayExercise3(void)
 	glColor3f (0,0,1);	glVertex2i (-int(g_iPos), -int(g_iPos));
 	glEnd ();
 	*/
-	Planet sun = Planet();
-	sun.setColor(Yellow);
-	sun.setRadius(80);
+	/* simple solution
 	sun.draw();
-	Planet earth = Planet();
-	earth.setRadius(15);
-	earth.setColor(Blue);
-	earth.setPosition(CVec2f(260, 0));
+	//earth rotates around sun
+	earth.rotate(0.02, CVec2f(0, 0));
 	earth.draw();
-	Planet moon = Planet();
-	moon.setRadius(5);
-	moon.setColor(MoonGrey);
-	moon.setPosition(CVec2f(300, 0));
+	//moon travels with the earth (rotates around the sun)
+	moon.rotate(0.02, CVec2f(0, 0));
+	//moon rotates around earth
+	moon.rotate(0.08, earth.getPosition());
 	moon.draw();
+	*/
+	/* rotation around common 'center of mass' */
+	sun.draw();
+	//center rotates around sun
+	mass_center.rotate(mass_center_velocity, CVec2f(0, 0));
+	//earth moves with center of mass
+	earth.rotate(mass_center_velocity, CVec2f(0, 0));
+	//eath rotates around mass center
+	earth.rotate(earth_moon_velocity, mass_center.getPosition());
+	earth.draw();
+	//moon moves with center of mass
+	moon.rotate(mass_center_velocity, CVec2f(0, 0));
+	//moon rotates around mass center
+	moon.rotate(earth_moon_velocity, mass_center.getPosition());
+	moon.draw();
+	
+	
 
-	earth.rotate(3.14);
-	earth.draw();
-	earth.rotate(3.3);
-	earth.draw();
+	
+
 	//
 	///////
 
