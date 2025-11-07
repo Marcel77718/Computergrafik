@@ -39,13 +39,31 @@ void Planet::draw() const
 		glVertex2i(p_x - y, p_y - x);
 		};
 
-	plot(x, y);
+	//plot(x, y);
+	int y_now = y;
+	while (y_now >= x - 1) {
+		plot(x, y_now);
+		y_now--;
+	}
 
 	while (y > x) {
 		if (d >= 0) { dse = 4 * (2 * (x - y) + 5); d += dse; x++; y--; }
 		else { de = 4 * (2 * x + 3); d += de; x++; }
-		plot(x, y);
+		int y_now = y;
+		while (y_now >= x-1) {
+			plot(x, y_now);
+			y_now--;
+		}
+		//plot(x, y);
 	}
+	//THIS IS EVIL BUT BEAUTIFUL!!! 0.707 is approximately cos(pi/4)
+	/*int outer_coord = int(0.707 * r);
+	for (int i = this->position[0]; i < outer_coord + this->position[0]; i++) {
+		for (int j = this->position[1]; j < outer_coord + this->position[1]; j++) {
+			plot(i, j);
+		}
+	}*/
+	
 
 	// implement BresenhamCircle here and use
 	// glVertex2i (x, y);

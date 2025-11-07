@@ -66,17 +66,17 @@ void init ()
 	g_iPos     = 0;
 	g_iPosIncr = 2;
 
-	sun.setColor(Yellow);
+	sun.setColor(SunYellow);
 	sun.setRadius(80);
 	earth.setRadius(15);
-	earth.setColor(Blue);
-	earth.setPosition(CVec2f(260, 0));
+	earth.setColor(EarthBlue);
+	earth.setPosition(CVec2f(300, 0));
 	moon.setRadius(5);
 	moon.setColor(MoonGrey);
-	moon.setPosition(CVec2f(300, 0));
-	mass_center.setPosition(CVec2f(earth.getPosition() * 3 + moon.getPosition()) * 0.25);
-	mass_center_velocity = 0.02;
-	earth_moon_velocity = 0.08;
+	moon.setPosition(CVec2f(345, 0));
+	mass_center.setPosition(CVec2f(earth.getPosition() * 4 + moon.getPosition()) * 0.2);
+	mass_center_velocity = 0.01;
+	earth_moon_velocity = 0.05;
 
 	// init variables for display2
 	int aiPos    [2] = {0, 0};
