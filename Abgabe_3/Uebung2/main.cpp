@@ -18,6 +18,7 @@
 #include "glut.h"
 // additions:
 #include "Planet.h"
+#include "Scene.h"
 
 ////////////////////////////////////////////////////////////
 //
@@ -52,6 +53,15 @@ Planet moon = Planet();
 Planet mass_center;
 float mass_center_velocity;
 float earth_moon_velocity;
+
+
+//our variables for assignment 3
+float center1[4] = { 0, 0, 0, 1 };
+CVec4f center_1 = CVec4f(center1);
+CVec3f* quader1 = constructQuader(center_1, 2.0, 2.0, 2.0);
+float center2[4] = { -2, -2, -2, 1 };
+CVec4f center_2 = CVec4f(center2);
+CVec3f* quader2 = constructQuader(center_1, 1.0, 0.5, 0.2);
 
 //
 /////////////////////////////////////////////////////////////
@@ -149,51 +159,24 @@ void displayExercise3(void)
 {
 	glClear (GL_COLOR_BUFFER_BIT);
 
-	///////
-	// remove the lines from "glBegin(...)" to "glEnd();" 
-	// 
-	// and display your planet data of EXERCISE 3 here 
-	// using the AFFINE implementation of affine maps.
-	//
-	/*
-	glBegin (GL_TRIANGLES);
-	glColor3f (1,0,0);	glVertex2i ( int(g_iPos),           0 );
-	glColor3f (0,1,0);	glVertex2i (-int(g_iPos),  int(g_iPos));
-	glColor3f (0,0,1);	glVertex2i (-int(g_iPos), -int(g_iPos));
-	glEnd ();
-	*/
-	/* simple solution
-	sun.draw();
-	//earth rotates around sun
-	earth.rotate(0.02, CVec2f(0, 0));
-	earth.draw();
-	//moon travels with the earth (rotates around the sun)
-	moon.rotate(0.02, CVec2f(0, 0));
-	//moon rotates around earth
-	moon.rotate(0.08, earth.getPosition());
-	moon.draw();
-	*/
-	/* rotation around common 'center of mass' */
-	sun.draw();
-	//center rotates around sun
-	mass_center.rotate(mass_center_velocity, CVec2f(0, 0));
-	//earth moves with center of mass
-	earth.rotate(mass_center_velocity, CVec2f(0, 0));
-	//eath rotates around mass center
-	earth.rotate(earth_moon_velocity, mass_center.getPosition());
-	earth.draw();
-	//moon moves with center of mass
-	moon.rotate(mass_center_velocity, CVec2f(0, 0));
-	//moon rotates around mass center
-	moon.rotate(earth_moon_velocity, mass_center.getPosition());
-	moon.draw();
-	
-	
+
+	CVec3f projectedQuader1[8];
+	for (int i = 0; i < 8; i++)
+	{
+		projectedQuader1[i] = projectZ(2.0, CVec4f(quader1[i], 1));
+	}
+
+	drawProjektedZ(projectedQuader1);
+
+	CVec3f projectedQuader2[8];
+	for (int i = 0; i < 8; i++)
+	{
+		projectedQuader2[i] = projectZ(2.0, CVec4f(quader2[i], 1));
+	}
+
+	drawProjektedZ(projectedQuader2);
 
 	
-
-	//
-	///////
 
 	// In double buffer mode the last two lines should always be
 	glFlush        ();
