@@ -43,3 +43,44 @@ CMat4d affineInverse(const CMat4d& M)
 	return T;
 }
 
+CMat4f getTransform(CVec4f ViewOrigin, CVec4f ViewDir, CVec4f ViewUp)
+{
+	// Create the transformation matrix from world coordinates to view coordinates
+	CVec4f zvv = -ViewDir; // zzvv-axis is anti-parallel to ViewDir
+	CVec4f yvv = ViewUp;   // yyvv-axis is parallel to ViewUp
+	float crossprod[4] = { yvv[1] * zvv[2] - yvv[2] * zvv[1],
+		zvv[0] * yvv[2] - zvv[2] * yvv[0],
+		yvv[0] * zvv[1] - yvv[1] * zvv[0],
+		0.0f };
+	CVec4f xvv = CVec4f(crossprod); // xxvv-axis is cross product of yyvv and zzvv
+	// normalize the axes
+	xvv = xvv * (1.0f / sqrtf(xvv[0] * xvv[0] + xvv[1] * xvv[1] + xvv[2] * xvv[2]));
+	yvv = yvv * (1.0f / sqrtf(yvv[0] * yvv[0] + yvv[1] * yvv[1] + yvv[2] * yvv[2]));
+	zvv = zvv * (1.0f / sqrtf(zvv[0] * zvv[0] + zvv[1] * zvv[1] + zvv[2] * zvv[2]));
+	CMat4f M; // transformation matrix
+	M(0, 0) = xvv[0]; M(0, 1) = yvv[0]; M(0, 2) = zvv[0]; M(0, 3) = ViewOrigin[0];
+	M(1, 0) = xvv[1]; M(1, 1) = yvv[1]; M(1, 2) = zvv[1]; M(1, 3) = ViewOrigin[1];
+	M(2, 0) = xvv[2]; M(2, 1) = yvv[2]; M(2, 2) = zvv[2]; M(2, 3) = ViewOrigin[2];
+	M(3, 0) = 0.0f;   M(3, 1) = 0.0f;   M(3, 2) = 0.0f;   M(3, 3) = 1.0f;
+
+	double Mat_array[4][4]; 
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			Mat_array[i][j] = static_cast<double>(M(i, j));
+		}
+	}
+	CMat4d MatrixDouble = affineInverse(CMat4d(Mat_array));
+	float Mat_array_f[4][4];
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			Mat_array_f[i][j] = static_cast<float>(MatrixDouble(i, j));
+		}
+	}
+	return CMat4f(Mat_array_f);
+
+}
+

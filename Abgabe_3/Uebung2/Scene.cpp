@@ -201,3 +201,23 @@ void drawQuader(CVec3f Cuboid[8], float fFocus, Color c)
 	glEnd();
 }
 
+void drawQuader(CVec3f Cuboid[8], float fFocus, Color c, CMat4f matTransf)
+{
+	glBegin(GL_POINTS);
+	glColor3d(c.r, c.g, c.b);
+	CVec3f projectedQuader[8];
+	for (int i = 0; i < 8; i++)
+	{
+		CVec4f pWorld = CVec4f(Cuboid[i], 1.0f);
+		CVec4f pView = matTransf * pWorld;
+		projectedQuader[i] = projectZallg(matTransf, fFocus, CVec4f(Cuboid[i], 1.0f));
+	}
+	drawProjektedZ(projectedQuader);
+	glEnd();
+}
+
+CVec4f projectZallg(CMat4f matTransf, float fFocus, CVec4f pWorld)
+{
+	CVec4f pView = matTransf * pWorld;
+	return projectZ(fFocus, pView);
+}

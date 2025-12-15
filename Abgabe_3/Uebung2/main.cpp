@@ -62,6 +62,12 @@ float center2_mir[4] = { 700, -400, -200, 1 };
 CVec4f center_2_mir = CVec4f(center2_mir);
 CVec3f* quader2_mir = constructQuader(center_2_mir, 100, 500, 200);
 
+
+CVec4f ViewOrigin;
+CVec4f ViewDir;
+CVec4f ViewUp;
+float fFocus;
+
 //
 /////////////////////////////////////////////////////////////
 
@@ -78,10 +84,11 @@ void init ()
 
 
 	// init variables for display2
-	int aiPos    [2] = {0, 0};
-	int aiPosIncr[2] = {2, 2};
-	g_vecPos.setData (aiPos);
-	g_vecPosIncr.setData (aiPosIncr);
+	
+	ViewOrigin = CVec4f(CVec4f(0.0f, 0.0f, 0.0f), 1.0f);
+	ViewDir = CVec4f(CVec4f(0.0f, 0.0f, -1.0f), 0.0f);
+	ViewUp = CVec4f(CVec4f(0.0f, 1.0f, 0.0f), 0.0f);
+	fFocus = 500.0f;
 }
 
 // Function to initialize the view to ortho-projection.
@@ -164,17 +171,23 @@ void displayExercise4(void)
 {
 	glClear (GL_COLOR_BUFFER_BIT);
 
-	///////
-	// remove the lines from "glBegin(...)" to "glEnd();" 
-	// 
-	// and display your planet data of EXERCISE 4 here 
-	// using the HOMOGENEOUS implementation of affine maps.
-	//
+	CMat4f transMat = getTransform(ViewOrigin, ViewDir, ViewUp);
+	/*std::cout << "Transformation Matrix: " << std::endl;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			std::cout << transMat(i, j) << " ";
+		}
+		std::cout << "\n\n" << std::endl;
+	}*/
 	
-
-
-	//
-	///////
+	CVec3f cuboid_in_view_coords[8];
+	/*for (int i = 0; i < 8; i++)
+	{
+		cuboid_in_view_coords[i] = (CVec3f)projectZallg(transMat, fFocus, CVec4f(quader1[i], 1.0f));
+	}*/
+	drawQuader(cuboid_in_view_coords, fFocus, SunYellow, transMat);
 
 	// In double buffer mode the last two lines should always be
 	glFlush        ();
@@ -193,6 +206,63 @@ void keyboard (unsigned char key, int x, int y)
 			break;
 		case '2':
 			glutDisplayFunc (displayExercise4);
+			break;
+		case 'F': // increase focal distance
+			fFocus += 1000.0f;
+			glutPostRedisplay();
+			break;
+		case 'f': // decrease focal distance
+			fFocus -= 1000.0f;
+			glutPostRedisplay();
+			break;
+		case 'X' : // increase x-rotation around WC
+
+			break;
+		case 'Y' : // increase y-rotation around WC
+			break;
+		case 'Z' : // increase z-rotation around WC
+			break;
+		case 'x' : // decrease x-rotation around WC
+			break;
+		case 'y' : // decrease y-rotation around WC
+			break;
+		case 'z' : // decrease z-rotation around WC
+			break;	
+		case 'A': // increase x-rotation around VC
+			break;
+		case 'B': // increase y-rotation around VC
+			break;
+		case 'C': // increase z-rotation around VC
+			break;
+		case 'a': // decrease x-rotation around VC
+			break;
+		case 'b': // decrease y-rotation around VC
+			break;
+		case 'c' : // decrease z-rotation around VC
+			break;
+		case 'U': // translate along x in WC
+			ViewOrigin[0] += 50.0f;
+			break;
+		case 'V': // translate along y in WC
+			ViewOrigin[1] += 50.0f;
+			break;
+		case 'W': // translate along z in WC
+			ViewOrigin[2] += 50.0f;
+			break;
+		case 'u': // translate along -x in WC
+			ViewOrigin[0] -= 50.0f;
+			break;
+		case 'v': // translate along -y in WC
+			ViewOrigin[1] -= 50.0f;
+			break;
+		case 'w': // translate along -z in WC
+			ViewOrigin[2] -= 50.0f;
+			break;
+		case 'R': // Reset view
+			ViewOrigin = CVec4f(CVec3f(0.0f, 0.0f, 0.0f), 1.0f);
+			ViewDir = CVec4f(CVec3f(0.0f, 0.0f, -1.0f), 0.0f);
+			ViewUp = CVec4f(CVec4f(0.0f, 1.0f, 0.0f), 0.0f);
+			fFocus = 500.0f;
 			break;
 		default:
 			// do nothing ...
