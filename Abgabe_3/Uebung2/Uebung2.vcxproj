@@ -169,14 +169,12 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="Planet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.h" />
     <ClInclude Include="cg_math.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Planet.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

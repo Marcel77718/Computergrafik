@@ -88,10 +88,6 @@ CVec3f* give_flat_quader()
 
 void drawProjektedZ(CVec3f Points[8])
 {
-	glBegin(GL_POINTS);
-	glColor3d(0.7, 0.7, 0.0);
-
-	
 	int p0_x = static_cast<int>(Points[0][0]);
 	int p0_y = static_cast<int>(Points[0][1]);
 	int p1_x = static_cast<int>(Points[1][0]);
@@ -147,7 +143,6 @@ void drawProjektedZ(CVec3f Points[8])
 	}
 	first_round = false;
 
-	glEnd();
 }
 
 void BresenhamLine(Point p1, Point p2, Color c)
@@ -189,5 +184,20 @@ void BresenhamLine(Point p1, Point p2, Color c)
 			y1 += sy;
 		}
 	}
+}
+
+void drawQuader(CVec3f Cuboid[8], float fFocus, Color c)
+{
+	glBegin(GL_POINTS);
+	glColor3d(c.r, c.g, c.b);
+
+	CVec3f projectedQuader[8];
+	for (int i = 0; i < 8; i++)
+	{
+		projectedQuader[i] = projectZ(fFocus, CVec4f(Cuboid[i], 1.0f));
+	}
+
+	drawProjektedZ(projectedQuader);
+	glEnd();
 }
 

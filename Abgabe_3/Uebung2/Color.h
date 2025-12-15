@@ -38,3 +38,4 @@ const Color White  (1.0, 1.0, 1.0);
 const Color MoonGrey(0.5, 0.5, 0.5);
 const Color EarthBlue(0.15, 0.2, 0.6);
 const Color SunYellow(1.0, 0.95, 0.3);
+const Color QuaderColor(0.7, 0.3, 0.6);

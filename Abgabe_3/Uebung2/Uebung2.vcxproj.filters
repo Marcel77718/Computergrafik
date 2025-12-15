@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Planet.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -39,9 +36,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Planet.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Vector.h">

@@ -31,6 +31,7 @@ CVec4f projectZ(float fFocus, CVec4f pView);
 void drawProjektedZ(CVec3f Points[8]);
 void BresenhamLine(Point p1, Point p2, Color c);
 CVec3f* give_flat_quader();
+void drawQuader(CVec3f Cuboid[8], float fFocus, Color c);
 
 
 

@@ -1,11 +1,11 @@
 /////////////////////////////////////////////////////////////////////////////
-//																									//
-// Code framework for lecture computer graphics WS 2025/26 assignment 2+3	//
-//																									//
-// A generic class for n-dimensional coordinate vectors							//
-//																									//
-// (c) Georg Umlauf																			//
-//																									//
+//																		   //
+// Code framework for lecture computer graphics WS 2025/26 assignment 2+3  //
+//																		   //
+// A generic class for n-dimensional coordinate vectors					   //
+//																		   //
+// (c) Georg Umlauf														   //
+//																		   //
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -17,7 +17,7 @@
 // maybe you have to switch to your local include path, depending on your GLUT installation
 #include "glut.h"
 // additions:
-#include "Planet.h"
+
 #include "Scene.h"
 
 ////////////////////////////////////////////////////////////
@@ -26,8 +26,8 @@
 //
 
 // resolution of the of the main window (can be changed by the user)
-int g_WinWidth  = 800;
-int g_WinHeight = 800;
+int g_WinWidth  = 1600;
+int g_WinHeight = 900;
 
 // global variable to tune the timer interval
 int g_iTimerMSecs;
@@ -45,14 +45,6 @@ float g_iPosIncr;		// ... position increment (used in display1)
 
 CVec2i g_vecPos;		// same as above but in vector form ...
 CVec2i g_vecPosIncr;	// (used in display2)
-
-//our variables for the planets
-Planet sun = Planet();
-Planet earth = Planet();
-Planet moon = Planet();
-Planet mass_center;
-float mass_center_velocity;
-float earth_moon_velocity;
 
 
 //our variables for assignment 3
@@ -83,17 +75,7 @@ void init ()
 	g_iPos     = 0;
 	g_iPosIncr = 2;
 
-	sun.setColor(SunYellow);
-	sun.setRadius(80);
-	earth.setRadius(15);
-	earth.setColor(EarthBlue);
-	earth.setPosition(CVec2f(300, 0));
-	moon.setRadius(5);
-	moon.setColor(MoonGrey);
-	moon.setPosition(CVec2f(345, 0));
-	mass_center.setPosition(CVec2f(earth.getPosition() * 4 + moon.getPosition()) * 0.2);
-	mass_center_velocity = 0.01;
-	earth_moon_velocity = 0.05;
+
 
 	// init variables for display2
 	int aiPos    [2] = {0, 0};
@@ -166,36 +148,9 @@ void displayExercise3(void)
 {
 	glClear (GL_COLOR_BUFFER_BIT);
 
-	/*CVec3f* flatQ = give_flat_quader();
-	drawProjektedZ(flatQ);*/
-
-
-	CVec3f projectedQuader1[8];
-	for (int i = 0; i < 8; i++)
-	{
-		projectedQuader1[i] = projectZ(300.0, CVec4f(quader1[i], 1.0f));
-	}
-
-	drawProjektedZ(projectedQuader1);
-
-	CVec3f projectedQuader2[8];
-	for (int i = 0; i < 8; i++)
-	{
-		projectedQuader2[i] = projectZ(300.0, CVec4f(quader2[i], 1.0f));
-	}
-
-	drawProjektedZ(projectedQuader2);
-
-
-	CVec3f projectedQuader3[8];
-	for (int i = 0; i < 8; i++)
-	{
-		projectedQuader3[i] = projectZ(300.0, CVec4f(quader3[i], 1.0f));
-	}
-
-	drawProjektedZ(projectedQuader3);
-
-
+	drawQuader(quader1, 500.0f, QuaderColor);
+	drawQuader(quader2, 400.0f, Yellow);
+	drawQuader(quader3, 300.0f, EarthBlue);
 
 	
 
@@ -215,19 +170,7 @@ void displayExercise4(void)
 	// and display your planet data of EXERCISE 4 here 
 	// using the HOMOGENEOUS implementation of affine maps.
 	//
-	sun.draw();
-	//center rotates around sun
-	mass_center.rotate(mass_center_velocity, CVec3f(0, 0, 1));
-	//earth moves with center of mass
-	earth.rotate(mass_center_velocity, CVec3f(0, 0, 1));
-	//eath rotates around mass center
-	earth.rotate(earth_moon_velocity, mass_center.getPositionHomogeneous());
-	earth.draw();
-	//moon moves with center of mass
-	moon.rotate(mass_center_velocity, CVec3f(0, 0, 1));
-	//moon rotates around mass center
-	moon.rotate(earth_moon_velocity, mass_center.getPositionHomogeneous());
-	moon.draw();
+	
 
 
 	//
