@@ -58,10 +58,17 @@ float earth_moon_velocity;
 //our variables for assignment 3
 float center1[4] = { 0, 0, 0, 1 };
 CVec4f center_1 = CVec4f(center1);
-CVec3f* quader1 = constructQuader(center_1, 2.0, 2.0, 2.0);
-float center2[4] = { -2, -2, -2, 1 };
+CVec3f* quader1 = constructQuader(center_1, 200, 200, 200);
+float center2[4] = { -700, -400, -200, 1 };
 CVec4f center_2 = CVec4f(center2);
-CVec3f* quader2 = constructQuader(center_1, 1.0, 0.5, 0.2);
+CVec3f* quader2 = constructQuader(center_2, 100, 500, 200);
+float center3[4] = { 600, -20, -250, 1.0 };
+CVec4f center_3 = CVec4f(center3);
+CVec3f* quader3 = constructQuader(center_3, 200, 400, 500);
+
+float center2_mir[4] = { 700, -400, -200, 1 };
+CVec4f center_2_mir = CVec4f(center2_mir);
+CVec3f* quader2_mir = constructQuader(center_2_mir, 100, 500, 200);
 
 //
 /////////////////////////////////////////////////////////////
@@ -159,11 +166,14 @@ void displayExercise3(void)
 {
 	glClear (GL_COLOR_BUFFER_BIT);
 
+	/*CVec3f* flatQ = give_flat_quader();
+	drawProjektedZ(flatQ);*/
+
 
 	CVec3f projectedQuader1[8];
 	for (int i = 0; i < 8; i++)
 	{
-		projectedQuader1[i] = projectZ(2.0, CVec4f(quader1[i], 1));
+		projectedQuader1[i] = projectZ(300.0, CVec4f(quader1[i], 1.0f));
 	}
 
 	drawProjektedZ(projectedQuader1);
@@ -171,10 +181,21 @@ void displayExercise3(void)
 	CVec3f projectedQuader2[8];
 	for (int i = 0; i < 8; i++)
 	{
-		projectedQuader2[i] = projectZ(2.0, CVec4f(quader2[i], 1));
+		projectedQuader2[i] = projectZ(300.0, CVec4f(quader2[i], 1.0f));
 	}
 
 	drawProjektedZ(projectedQuader2);
+
+
+	CVec3f projectedQuader3[8];
+	for (int i = 0; i < 8; i++)
+	{
+		projectedQuader3[i] = projectZ(300.0, CVec4f(quader3[i], 1.0f));
+	}
+
+	drawProjektedZ(projectedQuader3);
+
+
 
 	
 
