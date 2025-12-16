@@ -96,7 +96,7 @@ void Planet::rotate(float theta, CVec3f center)
 	TranslationBack.setRow(CVec3f( 1, 0, center[0]), 0);
 	TranslationBack.setRow(CVec3f( 0, 1, center[1]), 1);
 	TranslationBack.setRow(CVec3f( 0, 0,         1), 2);
-	CMatrix<float, 3> Transformation = TranslationToO * Rotation * TranslationBack;
+	CMatrix<float, 3> Transformation = TranslationBack * Rotation * TranslationToO;
 
 	this->setPositionHomogeneous(Transformation * this->getPositionHomogeneous());
 }
