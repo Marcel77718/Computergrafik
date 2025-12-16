@@ -208,8 +208,6 @@ void drawQuader(CVec3f Cuboid[8], float fFocus, Color c, CMat4f matTransf)
 	CVec3f projectedQuader[8];
 	for (int i = 0; i < 8; i++)
 	{
-		CVec4f pWorld = CVec4f(Cuboid[i], 1.0f);
-		CVec4f pView = matTransf * pWorld;
 		projectedQuader[i] = projectZallg(matTransf, fFocus, CVec4f(Cuboid[i], 1.0f));
 	}
 	drawProjektedZ(projectedQuader);
