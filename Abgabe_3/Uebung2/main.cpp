@@ -49,7 +49,7 @@ CVec2i g_vecPosIncr;	// (used in display2)
 
 
 //our variables for assignment 3
-float center1[4] = { 0, 0, 0, 1 };
+float center1[4] = { 100, 100, 100, 1 };
 CVec4f center_1 = CVec4f(center1);
 CVec3f* quader1 = constructQuader(center_1, 200, 200, 200);
 
@@ -293,36 +293,46 @@ void keyboard (unsigned char key, int x, int y)
 		case 'X': { // increase x-rotation around WC
 			ViewDir = rotateAroundWorldX(ViewDir, 0.05f);
 			ViewUp = rotateAroundWorldX(ViewUp, 0.05f);
+			ViewOrigin = rotateAroundWorldX(ViewOrigin, 0.05f);
+
 			glutPostRedisplay();
 			break;
 		}
 		case 'Y': { // increase y-rotation around WC
 			ViewDir = rotateAroundWorldY(ViewDir, 0.05f);
 			ViewUp = rotateAroundWorldY(ViewUp, 0.05f);
+			ViewOrigin = rotateAroundWorldY(ViewOrigin, 0.05f);
+
 			glutPostRedisplay();
 			break;
 		}
 		case 'Z': { // increase z-rotation around WC
 			ViewDir = rotateAroundWorldZ(ViewDir, 0.05f);
 			ViewUp = rotateAroundWorldZ(ViewUp, 0.05f);
+			ViewOrigin = rotateAroundWorldZ(ViewOrigin, 0.05f);
 			glutPostRedisplay();
 			break;
 		}
 		case 'x': { // decrease x-rotation around WC
 			ViewDir = rotateAroundWorldX(ViewDir, -0.05f);
 			ViewUp = rotateAroundWorldX(ViewUp, -0.05f);
+			ViewOrigin = rotateAroundWorldX(ViewOrigin, -0.05f);
 			glutPostRedisplay();
 			break;
 		}
 		case 'y': { // decrease y-rotation around WC
 			ViewDir = rotateAroundWorldY(ViewDir, -0.05f);
 			ViewUp = rotateAroundWorldY(ViewUp, -0.05f);
+			ViewOrigin = rotateAroundWorldY(ViewOrigin, -0.05f);
+
 			glutPostRedisplay();
 			break;
 		}
 		case 'z': { // decrease z-rotation around WC
 			ViewDir = rotateAroundWorldZ(ViewDir, -0.05f);
 			ViewUp = rotateAroundWorldZ(ViewUp, -0.05f);
+			ViewOrigin = rotateAroundWorldZ(ViewOrigin, -0.05f);
+
 			glutPostRedisplay();
 			break;
 		}
