@@ -136,3 +136,5 @@ typedef CMatrix<double, 4> CMat4d;
 
 CMat4d affineInverse(const CMat4d& M);	// inverse of AFFINE MAP only!!!
 CMat4f getTransform(CVec4f ViewOrigin, CVec4f ViewDir, CVec4f ViewUp); // get transformation matrix from world to view coordinates
+CMat4f getTransform2(CVec4f ViewOrigin, CVec4f ViewDir, CVec4f ViewUp);
+CMat4f getTransform3(CVec4f ViewOrigin, CVec4f ViewDir, CVec4f ViewUp);

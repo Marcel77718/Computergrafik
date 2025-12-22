@@ -246,7 +246,7 @@ void displayExercise4(void)
 {
 	glClear (GL_COLOR_BUFFER_BIT);
 
-	CMat4f transMat = getTransform(ViewOrigin, ViewDir, ViewUp);
+	CMat4f transMat = getTransform3(ViewOrigin, ViewDir, ViewUp);
 	
 	CVec3f projectedQuader1[8];
 	CVec3f projectedQuader2[8];

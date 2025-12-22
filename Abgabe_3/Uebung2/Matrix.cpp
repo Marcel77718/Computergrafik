@@ -84,3 +84,82 @@ CMat4f getTransform(CVec4f ViewOrigin, CVec4f ViewDir, CVec4f ViewUp)
 
 }
 
+CMat4f getTransform2(CVec4f ViewOrigin, CVec4f ViewDir, CVec4f ViewUp)
+{
+	//translation into world origin
+	CMat4f MT;
+	MT = MT.Identity();
+	MT.setCol(-ViewOrigin, 3);
+
+	//angle between ViewDir and y-(-z)-plane
+	CVec2f viewInXZ;
+	viewInXZ[0] = ViewDir[0];//x
+	viewInXZ[1] = -ViewDir[2];//-z
+	viewInXZ.normalize();
+	float cos_phi = viewInXZ.dot(CVec2f(0.0, 1.0));
+	float sin_phi = viewInXZ.dot(CVec2f(1.0, 0.0));
+	std::cout << "ViewDir: " << ViewDir[0] << ViewDir[1] << ViewDir[2] << ViewDir[3] << "\n";
+	std::cout << "viewInXZ: " << viewInXZ << "\n";
+	std::cout << "phi: " << atan2(sin_phi, cos_phi) << "\n";
+	std::cout << "cos: " << cos_phi << ", sin: " << sin_phi << std::endl;
+
+	//Rotation around world y into y-(-z)-plane
+	CMat4f MR;
+	MR = MR.Identity();
+	MR(0, 0) = cos_phi; MR(0, 2) = sin_phi;
+	MR(2, 0) = -sin_phi; MR(2, 2) = cos_phi;
+
+	//angle between ViewDir and x-(-z)-plane
+	CVec4f dirYawed = MR * ViewDir;
+	CVec2f viewInYZ(dirYawed[1], -dirYawed[2]);
+	viewInYZ.normalize();
+	float cos_theta = viewInYZ.dot(CVec2f(0.0, 1.0));
+	float sin_theta = viewInYZ.dot(CVec2f(1.0, 0.0)); //beide nochmal kontrollieren!
+	std::cout << "cos: " << cos_theta << ", sin: " << sin_theta << std::endl;
+
+	//Rotation around world x from y-z-plane into z-axis
+	CMat4f MR2;
+	MR2 = MR2.Identity();
+	MR2(1, 1) = cos_theta; MR2(1, 2) = -sin_theta;
+	MR2(2, 1) = sin_theta; MR2(2, 2) = cos_theta;
+
+	//angle between rotated ViewUp and world y
+	CVec4f rotatedUp = MR2 * MR * ViewUp;
+	CVec2f rotatedUp2 = CVec2f(rotatedUp[0], rotatedUp[1]);
+	float cos_gamma = rotatedUp2.dot(CVec2f(0.0, 1.0));
+	float sin_gamma = rotatedUp2.dot(CVec2f(1.0, 0.0));
+	std::cout << "rotatedUp: " << rotatedUp << "\n";
+	std::cout << "cos: " << cos_gamma << ", sin: " << sin_gamma << std::endl;
+
+	//Rotation around z-axis to align both ys
+	CMat4f MR3;
+	MR3 = MR3.Identity();
+	MR3(0, 0) = cos_gamma; MR3(0, 1) = -sin_gamma;
+	MR3(1, 0) = sin_gamma; MR3(1, 1) = cos_gamma;
+
+	return MR3 * MR2 * MR * MT;
+}
+
+CMat4f getTransform3(CVec4f ViewOrigin, CVec4f ViewDir, CVec4f ViewUp)
+{
+	CVec3f f = CVec3f(-ViewDir[0], -ViewDir[1], -ViewDir[2]);
+	f.normalize();
+	CVec3f r = CVec3f(ViewUp[0], ViewUp[1], ViewUp[2]).cross(f);
+	r.normalize();
+	CVec3f u = f.cross(r);
+
+	CMat4f M = CMat4f::Identity();
+
+	M(0, 0) = r[0]; M(1, 0) = r[1]; M(2, 0) = r[2];
+	M(0, 1) = u[0]; M(1, 1) = u[1]; M(2, 1) = u[2];
+	M(0, 2) = f[0]; M(1, 2) = f[1]; M(2, 2) = f[2];
+
+	CVec3f ViewO = CVec3f(ViewOrigin[0], ViewOrigin[1], ViewOrigin[2]);
+	M(3, 0) = -r.dot(ViewO);
+	M(3, 1) = -u.dot(ViewO);
+	M(3, 2) = -f.dot(ViewO);
+
+	return M;
+}
+
+
