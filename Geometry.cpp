@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "Geometry.h"
 
 
 // From the assignment description:
@@ -14,18 +14,18 @@ bool first_round = true; //debugging variable
 
 CVec4f projectZ(float fFocus, CVec4f pView)
 {
-	float denom = fFocus - pView[2];
-
+    float denom = fFocus - pView[2];
+    
 	if (denom <= 1e-3f) // Point is behind or too close to the eye point
-	{
+    {
 		return CVec4f(CVec3f(1e9f, 1e9f, 1e9f), 0.0f); // Return invalid point
 	}
 
-	//the real projection
+    //the real projection
 	float x_proj = (fFocus / denom) * pView[0];
 	float y_proj = (fFocus / denom) * pView[1];
 	float a[4] = { x_proj, y_proj, 0.0f, 1.0f };
-	return CVec4f(a);
+    return CVec4f(a);
 }
 
 CVec3f* constructQuader(CVec4f center, float width, float height, float depth)
@@ -69,16 +69,16 @@ void shiftQuader(CVec4f* quader, float x, float y, float z)
 
 CVec3f* give_flat_quader()
 {
-	CVec3f* flat = new CVec3f[8];
-	flat[0] = CVec3f(10, 0, 0);
-	flat[1] = CVec3f(10, 10, 0);
-	flat[2] = CVec3f(0, 10, 0);
+    CVec3f* flat = new CVec3f[8];
+    flat[0] = CVec3f(10, 0, 0);
+    flat[1] = CVec3f(10, 10, 0);
+    flat[2] = CVec3f(0, 10, 0);
 	flat[3] = CVec3f(0, 0, 0);
 	flat[4] = CVec3f(20, 0, 0);
 	flat[5] = CVec3f(20, 20, 0);
 	flat[6] = CVec3f(0, 20, 0);
 	flat[7] = CVec3f(0, 0, 0);
-	return flat;
+    return flat;
 }
 
 // Helper function to check if a projected point is valid
@@ -87,8 +87,6 @@ bool isValidPoint(const CVec3f& p)
 	// Reject points with very large coordinates (invalid or too far off screen)
 	return std::abs(p[0]) < 5000.0f && std::abs(p[1]) < 5000.0f;
 }
-
-
 
 void drawProjektedZ(CVec3f Points[8])
 {
@@ -135,6 +133,7 @@ void drawProjektedZ(CVec3f Points[8])
 		int p4_y = static_cast<int>(Points[4][1]);
 		BresenhamLine(Point(p7_x, p7_y), Point(p4_x, p4_y), Color(0.7, 0.7, 0.0));
 	}
+
 	
 	//connecting lines
 	for (int i = 0; i < 4; i++)
@@ -218,6 +217,8 @@ void drawQuader(CVec3f Cuboid[8], float fFocus, Color c, CMat4f matTransf)
 	CVec3f projectedQuader[8];
 	for (int i = 0; i < 8; i++)
 	{
+		CVec4f pWorld = CVec4f(Cuboid[i], 1.0f);
+		CVec4f pView = matTransf * pWorld;
 		projectedQuader[i] = projectZallg(matTransf, fFocus, CVec4f(Cuboid[i], 1.0f));
 	}
 	drawProjektedZ(projectedQuader);

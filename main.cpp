@@ -15,11 +15,10 @@
 #include <iostream>
 #include <cmath>
 
-// maybe you have to switch to your local include path, depending on your GLUT installation
 #include "glut.h"
 // additions:
 
-#include "Scene.h"
+#include "Geometry.h"
 
 ////////////////////////////////////////////////////////////
 //
@@ -49,7 +48,7 @@ CVec2i g_vecPosIncr;	// (used in display2)
 
 
 //our variables for assignment 3
-float center1[4] = { 100, 100, 100, 1 };
+float center1[4] = { 0, 0, 0, 1 };
 CVec4f center_1 = CVec4f(center1);
 CVec3f* quader1 = constructQuader(center_1, 200, 200, 200);
 
@@ -120,9 +119,9 @@ CVec4f rotateAroundViewAxis(const CVec4f& vec, const CVec4f& axis, float angle)
 	float cos_a = cos(angle);
 	float sin_a = sin(angle);
 	float one_minus_cos = 1.0f - cos_a;
-
+	
 	CVec4f normalized_axis = axis;
-	float length = sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
+	float length = sqrt(axis[0]*axis[0] + axis[1]*axis[1] + axis[2]*axis[2]);
 	if (length > 1e-6f)
 	{
 		normalized_axis[0] /= length;
@@ -132,16 +131,16 @@ CVec4f rotateAroundViewAxis(const CVec4f& vec, const CVec4f& axis, float angle)
 	
 	CVec4f result;
 	// v_rot = v*cos(a) + (k x v)*sin(a) + k*(k·v)*(1-cos(a))
-	float dot_product = normalized_axis[0] * vec[0] + normalized_axis[1] * vec[1] + normalized_axis[2] * vec[2];
-
+	float dot_product = normalized_axis[0]*vec[0] + normalized_axis[1]*vec[1] + normalized_axis[2]*vec[2];
+	
 	// Cross product k x v
-	float cross_x = normalized_axis[1] * vec[2] - normalized_axis[2] * vec[1];
-	float cross_y = normalized_axis[2] * vec[0] - normalized_axis[0] * vec[2];
-	float cross_z = normalized_axis[0] * vec[1] - normalized_axis[1] * vec[0];
-
-	result[0] = vec[0] * cos_a + cross_x * sin_a + normalized_axis[0] * dot_product * one_minus_cos;
-	result[1] = vec[1] * cos_a + cross_y * sin_a + normalized_axis[1] * dot_product * one_minus_cos;
-	result[2] = vec[2] * cos_a + cross_z * sin_a + normalized_axis[2] * dot_product * one_minus_cos;
+	float cross_x = normalized_axis[1]*vec[2] - normalized_axis[2]*vec[1];
+	float cross_y = normalized_axis[2]*vec[0] - normalized_axis[0]*vec[2];
+	float cross_z = normalized_axis[0]*vec[1] - normalized_axis[1]*vec[0];
+	
+	result[0] = vec[0]*cos_a + cross_x*sin_a + normalized_axis[0]*dot_product*one_minus_cos;
+	result[1] = vec[1]*cos_a + cross_y*sin_a + normalized_axis[1]*dot_product*one_minus_cos;
+	result[2] = vec[2]*cos_a + cross_z*sin_a + normalized_axis[2]*dot_product*one_minus_cos;
 	result[3] = vec[3];
 	return result;
 }
@@ -159,7 +158,7 @@ void init ()
 
 
 	// init variables for display2
-	
+	// x
 	ViewOrigin = CVec4f(CVec4f(0.0f, 0.0f, 0.0f), 1.0f);
 	ViewDir = CVec4f(CVec4f(0.0f, 0.0f, -1.0f), 0.0f);
 	ViewUp = CVec4f(CVec4f(0.0f, 1.0f, 0.0f), 0.0f);
@@ -226,13 +225,14 @@ void timer (int value)
 }
 
 // display callback function for EXERCISE 3
+// x
 void displayExercise3(void)
 {
 	glClear (GL_COLOR_BUFFER_BIT);
 
-	drawQuader(quader1, 500.0f, QuaderColor);
-	drawQuader(quader2, 400.0f, Yellow);
-	drawQuader(quader3, 300.0f, EarthBlue);
+	drawQuader(quader1, fFocus, QuaderColor);
+	drawQuader(quader2, fFocus, Cyan);
+	drawQuader(quader3, fFocus, Magenta);
 
 	
 
@@ -242,6 +242,7 @@ void displayExercise3(void)
 }
 
 // display callback function for EXERCISE 4
+// x
 void displayExercise4(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -249,155 +250,155 @@ void displayExercise4(void)
 	CMat4f transMat = getTransform(ViewOrigin, ViewDir, ViewUp);
 
 	drawQuader(quader1, fFocus, QuaderColor, transMat);
-	drawQuader(quader2, fFocus, Yellow, transMat);
-	drawQuader(quader3, fFocus, EarthBlue, transMat);
+	drawQuader(quader2, fFocus, Cyan, transMat);
+	drawQuader(quader3, fFocus, Magenta, transMat);
 
 	glFlush();
 	glutSwapBuffers();
 }
 
-void keyboard(unsigned char key, int x, int y)
+void keyboard (unsigned char key, int x, int y) 
 {
 	switch (key) {
-	case 'q':
-	case 'Q':
-		exit(0); // quit program
-		break;
-	case '1':
-		glutDisplayFunc(displayExercise3);
-		break;
-	case '2':
-		glutDisplayFunc(displayExercise4);
-		break;
-	case 'F': // increase focal distance
-		fFocus += 50.0f;
-		glutPostRedisplay();
-		break;
-	case 'f': // decrease focal distance
-		fFocus -= 50.0f;
-		if (fFocus < 1.0f) fFocus = 1.0f; // prevent negative focal distance
-		glutPostRedisplay();
-		break;
-	case 'X': { // increase x-rotation around WC
-		ViewDir = rotateAroundWorldX(ViewDir, 0.05f);
-		ViewUp = rotateAroundWorldX(ViewUp, 0.05f);
-		ViewOrigin = rotateAroundWorldX(ViewOrigin, 0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'Y': { // increase y-rotation around WC
-		ViewDir = rotateAroundWorldY(ViewDir, 0.05f);
-		ViewUp = rotateAroundWorldY(ViewUp, 0.05f);
-		ViewOrigin = rotateAroundWorldY(ViewOrigin, 0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'Z': { // increase z-rotation around WC
-		ViewDir = rotateAroundWorldZ(ViewDir, 0.05f);
-		ViewUp = rotateAroundWorldZ(ViewUp, 0.05f);
-		ViewOrigin = rotateAroundWorldZ(ViewOrigin, 0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'x': { // decrease x-rotation around WC
-		ViewDir = rotateAroundWorldX(ViewDir, -0.05f);
-		ViewUp = rotateAroundWorldX(ViewUp, -0.05f);
-		ViewOrigin = rotateAroundWorldX(ViewOrigin, -0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'y': { // decrease y-rotation around WC
-		ViewDir = rotateAroundWorldY(ViewDir, -0.05f);
-		ViewUp = rotateAroundWorldY(ViewUp, -0.05f);
-		ViewOrigin = rotateAroundWorldY(ViewOrigin, -0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'z': { // decrease z-rotation around WC
-		ViewDir = rotateAroundWorldZ(ViewDir, -0.05f);
-		ViewUp = rotateAroundWorldZ(ViewUp, -0.05f);
-		ViewOrigin = rotateAroundWorldZ(ViewOrigin, -0.05f);
+		case 'q':
+		case 'Q':
+			exit (0); // quit program
+			break;
+		case '1':
+			glutDisplayFunc (displayExercise3);
+			break;
+		case '2':
+			glutDisplayFunc (displayExercise4);
+			break;
+		case 'F': // increase focal distance
+			fFocus += 50.0f;
+			glutPostRedisplay();
+			break;
+		case 'f': // decrease focal distance
+			fFocus -= 50.0f;
+			if (fFocus < 1.0f) fFocus = 1.0f; // prevent negative focal distance
+			glutPostRedisplay();
+			break;
+		case 'X': { // increase x-rotation around WC
+			ViewDir = rotateAroundWorldX(ViewDir, 0.05f);
+			ViewUp = rotateAroundWorldX(ViewUp, 0.05f);
+			ViewOrigin = rotateAroundWorldX(ViewOrigin, 0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'Y': { // increase y-rotation around WC
+			ViewDir = rotateAroundWorldY(ViewDir, 0.05f);
+			ViewUp = rotateAroundWorldY(ViewUp, 0.05f);
+			ViewOrigin = rotateAroundWorldY(ViewOrigin, 0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'Z': { // increase z-rotation around WC
+			ViewDir = rotateAroundWorldZ(ViewDir, 0.05f);
+			ViewUp = rotateAroundWorldZ(ViewUp, 0.05f);
+			ViewOrigin = rotateAroundWorldZ(ViewOrigin, 0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'x': { // decrease x-rotation around WC
+			ViewDir = rotateAroundWorldX(ViewDir, -0.05f);
+			ViewUp = rotateAroundWorldX(ViewUp, -0.05f);
+			ViewOrigin = rotateAroundWorldX(ViewOrigin, -0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'y': { // decrease y-rotation around WC
+			ViewDir = rotateAroundWorldY(ViewDir, -0.05f);
+			ViewUp = rotateAroundWorldY(ViewUp, -0.05f);
+			ViewOrigin = rotateAroundWorldY(ViewOrigin, -0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'z': { // decrease z-rotation around WC
+			ViewDir = rotateAroundWorldZ(ViewDir, -0.05f);
+			ViewUp = rotateAroundWorldZ(ViewUp, -0.05f);
+			ViewOrigin = rotateAroundWorldZ(ViewOrigin, -0.05f);
 
-		glutPostRedisplay();
-		break;
-	}
-	case 'A': { // increase roll VC (around ViewDir axis)
-		ViewUp = rotateAroundViewAxis(ViewUp, ViewDir, 0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'B': { // increase yaw around VC (around right axis)
-		ViewDir = rotateAroundViewAxis(ViewDir, ViewUp, 0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'C': { // increase pitch around VC (around right axis)
-		float right[4] = { -(ViewUp[1] * ViewDir[2] - ViewUp[2] * ViewDir[1]),
-		-(ViewDir[0] * ViewUp[2] - ViewDir[2] * ViewUp[0]),
-		-(ViewUp[0] * ViewDir[1] - ViewUp[1] * ViewDir[0]),
-		0.0f };
-		CVec4f rightVec = CVec4f(right);
-		ViewDir = rotateAroundViewAxis(ViewDir, rightVec, 0.05f);
-		ViewUp = rotateAroundViewAxis(ViewUp, rightVec, 0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'a': { // decrease roll around VC
-		ViewUp = rotateAroundViewAxis(ViewUp, ViewDir, -0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'b': { // decrease yaw around VC
-
-		ViewDir = rotateAroundViewAxis(ViewDir, ViewUp, -0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'c': { // decrease pitch around VC
-		float right[4] = { ViewUp[1] * ViewDir[2] - ViewUp[2] * ViewDir[1],
-			ViewDir[0] * ViewUp[2] - ViewDir[2] * ViewUp[0],
-			ViewUp[0] * ViewDir[1] - ViewUp[1] * ViewDir[0],
+			glutPostRedisplay();
+			break;
+		}
+		case 'A': { // increase roll VC (around ViewDir axis)
+			ViewUp = rotateAroundViewAxis(ViewUp, ViewDir, 0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'B': { // increase yaw around VC (around right axis)
+			ViewDir = rotateAroundViewAxis(ViewDir, ViewUp, 0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'C': { // increase pitch around VC (around right axis)
+			float right[4] = { -(ViewUp[1] * ViewDir[2] - ViewUp[2] * ViewDir[1]),
+			-(ViewDir[0] * ViewUp[2] - ViewDir[2] * ViewUp[0]),
+			-(ViewUp[0] * ViewDir[1] - ViewUp[1] * ViewDir[0]),
 			0.0f };
-		CVec4f rightVec = CVec4f(right);
-		ViewDir = rotateAroundViewAxis(ViewDir, rightVec, -0.05f);
-		ViewUp = rotateAroundViewAxis(ViewUp, rightVec, -0.05f);
-		glutPostRedisplay();
-		break;
-	}
-	case 'U': // translate along x in WC
-		ViewOrigin[0] += 50.0f;
-		glutPostRedisplay();
-		break;
-	case 'V': // translate along y in WC
-		ViewOrigin[1] += 50.0f;
-		glutPostRedisplay();
-		break;
-	case 'W': // translate along z in WC
-		ViewOrigin[2] += 50.0f;
-		glutPostRedisplay();
-		break;
-	case 'u': // translate along -x in WC
-		ViewOrigin[0] -= 50.0f;
-		glutPostRedisplay();
-		break;
-	case 'v': // translate along -y in WC
-		ViewOrigin[1] -= 50.0f;
-		glutPostRedisplay();
-		break;
-	case 'w': // translate along -z in WC
-		ViewOrigin[2] -= 50.0f;
-		glutPostRedisplay();
-		break;
-	case 'R': // Reset view
-		ViewOrigin = CVec4f(CVec3f(0.0f, 0.0f, 0.0f), 1.0f);
-		ViewDir = CVec4f(CVec3f(0.0f, 0.0f, -1.0f), 0.0f);
-		ViewUp = CVec4f(CVec3f(0.0f, 1.0f, 0.0f), 0.0f);
-		fFocus = 500.0f;
-		glutPostRedisplay();
-		break;
-	default:
-		// do nothing ...
-		break;
+			CVec4f rightVec = CVec4f(right);
+			ViewDir = rotateAroundViewAxis(ViewDir, rightVec, 0.05f);
+			ViewUp = rotateAroundViewAxis(ViewUp, rightVec, 0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'a': { // decrease roll around VC
+			ViewUp = rotateAroundViewAxis(ViewUp, ViewDir, -0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'b': { // decrease yaw around VC
+			
+			ViewDir = rotateAroundViewAxis(ViewDir, ViewUp, -0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'c': { // decrease pitch around VC
+			float right[4] = { ViewUp[1] * ViewDir[2] - ViewUp[2] * ViewDir[1],
+				ViewDir[0] * ViewUp[2] - ViewDir[2] * ViewUp[0],
+				ViewUp[0] * ViewDir[1] - ViewUp[1] * ViewDir[0],
+				0.0f };
+			CVec4f rightVec = CVec4f(right);
+			ViewDir = rotateAroundViewAxis(ViewDir, rightVec, -0.05f);
+			ViewUp = rotateAroundViewAxis(ViewUp, rightVec, -0.05f);
+			glutPostRedisplay();
+			break;
+		}
+		case 'U': // translate along x in WC
+			ViewOrigin[0] += 50.0f;
+			glutPostRedisplay();
+			break;
+		case 'V': // translate along y in WC
+			ViewOrigin[1] += 50.0f;
+			glutPostRedisplay();
+			break;
+		case 'W': // translate along z in WC
+			ViewOrigin[2] += 50.0f;
+			glutPostRedisplay();
+			break;
+		case 'u': // translate along -x in WC
+			ViewOrigin[0] -= 50.0f;
+			glutPostRedisplay();
+			break;
+		case 'v': // translate along -y in WC
+			ViewOrigin[1] -= 50.0f;
+			glutPostRedisplay();
+			break;
+		case 'w': // translate along -z in WC
+			ViewOrigin[2] -= 50.0f;
+			glutPostRedisplay();
+			break;
+		case 'R': // Reset view
+			ViewOrigin = CVec4f(CVec3f(0.0f, 0.0f, 0.0f), 1.0f);
+			ViewDir = CVec4f(CVec3f(0.0f, 0.0f, -1.0f), 0.0f);
+			ViewUp = CVec4f(CVec3f(0.0f, 1.0f, 0.0f), 0.0f);
+			fFocus = 500.0f;
+			glutPostRedisplay();
+			break;
+		default:
+			// do nothing ...
+			break;
 	};
 }
 
