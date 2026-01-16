@@ -36,8 +36,8 @@ using namespace std;
 
 // resolution of texture 
 // !!!ATTENTION!!! not every resolution works!
-#define TEX_RES_X 400
-#define TEX_RES_Y 400
+#define TEX_RES_X 500
+#define TEX_RES_Y 500
 // Number of pixel of texture
 #define TEX_RES TEX_RES_X*TEX_RES_Y
 // length of texture's axis is asymmetric: -TexRes#/2 to TexRes#/2-1
@@ -48,8 +48,8 @@ char g_Buffer[3*TEX_RES];
 GLuint g_TexID = 0;
 
 // resolution of main window (can be changed by user)
-int g_WinWidth  = 400;
-int g_WinHeight = 400;
+int g_WinWidth  = 1000;
+int g_WinHeight = 1000;
 
 // increments for interaction
 double illum_inc     = 0.05;		// increment for illumination values
@@ -107,8 +107,31 @@ CVec3d intersectSphere(const CVec3d& EyePos, const CVec3d& ViewDir)
 	// This is the place to implement a sphere-ray-intersection
 	// 
 	////////////////////////////////////////////////////////////
+	// EyePos + lambda*ViewDir is on the surface of the sphere
+	
+	
+	const CVec3d L = EyePos - sphere.getCenter();
 
-	return CVec3d(0,0,-1);
+	const double a = ViewDir.dot(ViewDir);   // = 1 if normalized
+	const double b = 2.0 * ViewDir.dot(L);
+	const double c = L.dot(L) - sphere.getRadius() * sphere.getRadius();
+
+	const double discriminant = b * b - 4 * a * c;
+
+	if (discriminant < 0.0f)
+		return CVec3d(0, 0, -1);
+
+	const double sqrtD = std::sqrt(discriminant);
+
+	double t0 = (-b - sqrtD) / (2 * a);
+	double t1 = (-b + sqrtD) / (2 * a);
+
+	// ensure t0 <= t1
+	if (t0 > t1) std::swap(t0, t1);
+
+	// t0 is the lambda for the first intersection point
+
+	return EyePos + ViewDir * t0;
 }
 
 Color illumination(const CVec3d& HitPos, const CVec3d& ViewDir) 
@@ -154,6 +177,29 @@ Color illumination(const CVec3d& HitPos, const CVec3d& ViewDir)
 	// Please try different parameter settings for Ka, Ks, Kd, shi, Ia, Id, Is
 	// 
 	////////////////////////////////////////////////////////////
+
+
+
+	//ambient component
+	const Color ambientComponent = Ka * Ia;
+	
+	//diffuse component
+	const CVec3d N = (HitPos - sphere.getCenter()).normalized(); //normal vector
+	const CVec3d L = (LightPos - HitPos).normalized(); //light vector
+	const double ndotl = max(0.0, N.dot(L));
+	const Color diffuseComponent = Kd * Id * ndotl;
+
+	//specular component
+	const CVec3d EyePos = CVec3d(0.0, 0.0, A);
+	const CVec3d V = (EyePos - HitPos).normalized();
+	const CVec3d R = (N * (2.0 * N.dot(L)) - L).normalized();
+	const double rdotv = max(0.0, R.dot(V));
+	const Color specularComponent = Ks * Is * pow(rdotv, shi);
+
+	double r = min(1.0, ambientComponent.r + diffuseComponent.r + specularComponent.r);
+	double g = min(1.0, ambientComponent.g + diffuseComponent.g + specularComponent.g);
+	double b = min(1.0, ambientComponent.b + diffuseComponent.b + specularComponent.b);
+	pixelColor = Color(r, g, b);
 
 	return pixelColor;
 }
